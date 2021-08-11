@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Document</title>
+    <style>
+        div {
+            display: none;
+        }
+
+        #firstentry {
+            display: block;
+        }
+        #remove{
+            display:block;
+        }
+        table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: gray;
+  color: white;
+}
+        tr td:first-child:before
+{
+  counter-increment: Serial;      /* Increment the Serial counter */
+  content:  counter(Serial); /* Display the counter */
+}
+    </style>
+
+
+
+
+
+
+
+
+
+
+    <script >
+            
+        //this is for currency so it will always same for everyone that's why i wrote it here
+        function moreunit(){
+        fetch('http://127.0.0.1:8000/currency/')
+            .then(response => response.json())
+            .then(data => {
+                
+                if(document.getElementById("currency").value=='more'){
+                    document.getElementById("currency").innerHTML='';
+                var newoption = document.createElement("option");
+                newoption.innerHTML = "--select--";
+                document.getElementById("currency").options.add(newoption);
+                for (option in data) {
+                    var newoption = document.createElement("option");
+                    newoption.value = `${data[option].symbol}`;
+                    newoption.innerHTML = `${data[option].symbol}`;
+                    document.getElementById("currency").options.add(newoption);
+                }
+        }});}
+
+
+
+        //this funtion is made to reset the whole display and only show the first scroll down list
+        function display1(s1) {
+            var div = document.getElementsByTagName("div");
+
+            for (x of div) {
+                x.style.display = 'none';
+            }
+            document.getElementById(s1).style.display = 'block';
+
+        }
+        //this function is to reset the form if the second scroll down list has any change in it
+        function display2(s1, s2) {
+            var div = document.getElementsByTagName("div");
+
+            for (x of div) {
+                x.style.display = 'none';
+            }
+            document.getElementById(s1).style.display = 'block';
+            document.getElementById(s2).style.display = 'block';
+
+
+        }
+
+
+
+        // this is for the first option that we gonna select
+        // this will be called when the first scrolldown list gona change so i just have to reset all the content of the page exept the
+        // first list and recall this function so it will display the second list
+
+        function first(s1, s2,s3,s4) {
+            display1(s1);
+            console.log("hello world");
+            var s1 = document.getElementById(s1);
+            var s2 = document.getElementById(s2);
+            var s2select = document.getElementById(s4);
+            var s1select = document.getElementById(s3);
+            s2.style.display = 'block';
+            s2select.innerHTML = '';
+
+
+            fetch('http://127.0.0.1:8000/selection/')
+                .then(response => response.json())
+                .then(data => {
+                    var newoption = document.createElement("option");
+                    newoption.innerHTML = "--select--";
+                    s2select.options.add(newoption);
+                    for (option in data) {
+                        var newoption = document.createElement("option");
+                        if (data[option].catagory == s1select.value) {
+                            newoption.value = `${data[option].id}`;
+                            newoption.innerHTML = `${data[option].subcatagory1}`;
+                            s2select.options.add(newoption);
+                        }
+                    }
+                });
+        }
+
+
+
+
+        // this is the function which will be called when there is anyh selection change i the second scroll down list 
+        // so in this display2 fuction will be called first so that whenver it is changed that second scrooll down list 
+        // the all things disappear except the first and second scrolll down list
+
+        function second(s1, s2, s3, s4, s5, s6) {
+            display2("firstentry", "subcatagory");
+
+            var s1 = document.getElementById(s1);
+            var s2 = document.getElementById(s2);
+            var s3 = document.getElementById(s3);
+            var s4 = document.getElementById(s4);
+            var s5 = document.getElementById(s5);
+            var s6 = document.getElementById(s6);
+            s2.innerHTML = '';
+            
+            console.log("yaha tak to pahuch raha h");
+
+            // this is for whenever user selects wafers or substrate
+            if ('1' == s1.value || '2' == s1.value) {
+                
+                document.getElementById("subcatagoryselectspan").innerHTML="Wafers/substrate";
+                s5.style.display = 'block';
+                s6.style.display = 'none';
+                fetch('http://127.0.0.1:8000/selection/')
+                    .then(response => response.json())
+                    .then(data => {
+                        var newoption = document.createElement("option");
+                        newoption.innerHTML = "--select--";
+                        s2.options.add(newoption);
+                        for (option in data) {
+                            var newoption = document.createElement("option");
+                            if (data[option].catagory == 'substrateorwafers') {
+                                newoption.value = `${data[option].id}`;
+                                newoption.innerHTML = `${data[option].subcatagory1}`;
+                                s2.options.add(newoption);
+
+                            }
+                        }
+                    });
+                  document.getElementById("need").style.display ="block";
+            }
+            else if ('5' == s1.value) {
+                document.getElementById("subcatagoryselectspan").innerHTML="Gases";
+                s5.style.display = 'block';
+                s6.style.display = 'none';
+                fetch('http://127.0.0.1:8000/selection/')
+                    .then(response => response.json())
+                    .then(data => {
+                        var newoption = document.createElement("option");
+                        newoption.innerHTML = "--select--";
+                        s2.options.add(newoption);
+                        for (option in data) {
+                            var newoption = document.createElement("option");
+                            if (data[option].catagory == 'gases') {
+                                newoption.value = `${data[option].id}`;
+                                newoption.innerHTML = `${data[option].subcatagory1}`;
+                                s2.options.add(newoption);
+                            }
+                        }
+                    });
+                    document.getElementById("need").style.display ="block";
+            }
+            else if ('6' == s1.value) {
+                document.getElementById("subcatagoryselectspan").innerHTML="Labsupplies";
+                s5.style.display = 'block';
+                s6.style.display = 'none';
+                fetch('http://127.0.0.1:8000/selection/')
+                    .then(response => response.json())
+                    .then(data => {
+                        var newoption = document.createElement("option");
+                        newoption.innerHTML = "--select--";
+                        s2.options.add(newoption);
+                        for (option in data) {
+                            var newoption = document.createElement("option");
+                            if (data[option].catagory == 'labsupplies') {
+                                newoption.value = `${data[option].id}`;
+                                newoption.innerHTML = `${data[option].subcatagory1}`;
+                                s2.options.add(newoption);
+                            }
+                        }
+                    });
+                    document.getElementById("need").style.display ="block";   
+            }
+            else if ('9' == s1.value) {
+                document.getElementById("subcatagoryselectspan").innerHTML="Softwarelicence";
+                s5.style.display = 'block';
+                s6.style.display = 'none';
+                fetch('http://127.0.0.1:8000/selection/')
+                    .then(response => response.json())
+                    .then(data => {
+                        var newoption = document.createElement("option");
+                        newoption.innerHTML = "--select--";
+                        s2.options.add(newoption);
+                        for (option in data) {
+                            var newoption = document.createElement("option");
+                            if (data[option].catagory == 'softwarelicence') {
+                                newoption.value = `${data[option].id}`;
+                                newoption.innerHTML = `${data[option].subcatagory1}`;
+                                s2.options.add(newoption);
+                            }
+                        }
+                    });
+                    document.getElementById("need").style.display ="block";
+            }
+            else if ('3' == s1.value || '4' == s1.value || '7' == s1.value) {
+                s6.style.display = 'block';
+                s5.style.display = 'none';
+                s4.innerHTML = '';
+                document.getElementById("subcatagoryinputspan").innerHTML="General Supplies";
+
+                if (s1.value == '3' || s1.value == '4') {
+                    fetch('http://127.0.0.1:8000/compounds/')
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            document.getElementById("subcatagoryinputspan").innerHTML="Chemical Reagents";
+                            for (option in data) {
+                                var newoption = document.createElement("option");
+                                newoption.value = `${data[option].casrn} (${data[option].chemicalformulla})`;
+                                newoption.innerHTML = `${data[option].compoundname}`;
+                                s4.appendChild(newoption);
+                                document.getElementById("MSDS").style.display = 'block';
+                            }
+
+
+                        });
+                }
+                document.getElementById("need").style.display ="block";
+            }
+
+
+
+        }
+
+        function Thirdselection(s1, s2) {
+            var s1 = document.getElementById(s1);
+            var s2 = document.getElementById(s2);
+            s2.style.display = 'none';
+
+            if (s1.value == '17' || s1.value == '28' || s1.value == '34' || s1.value == '35' || s1.value == '36') {
+                s2.style.display = 'block';
+            }
+            document.getElementById("need").style.display ="block";
+
+
+
+
+        }
+       
+
+
+
+
+
+
+        //testing
+
+        function popupfunc() {
+        window.open("popup","popup_page","status=1,height:300,width:600,toolbar=0,resizeable=0")}
+        function vendortogo() {
+console.log("hello");
+        }
+
+    // function add_item(){
+    //         var li=[name=document.get,
+    //         itemquantity=`${document.getElementsByName("quantityinput")} ${document.getElementsByName("quantityunit")}`,
+    //         vendor=]
+    // }
+
+      
+    </script>
+</head>
+
+<body>
+    <h1>Add Item</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div id="firstentry">
+            Consumability  :  
+        <select name="firstcatagory" id="firstentryselect" onchange="first('firstentry','subcatagory','firstentryselect','divsubcatagory')">
+            <option value=""></option>
+            <option value="Consumable">Consumable</option>
+            <option value="NonConsumable">Non Consumable</option>
+        </select>
+        </div>
+
+        <div id="subcatagory">
+            Catagory :
+        <select name="secondcatagory" id="divsubcatagory"
+         onchange="second('divsubcatagory','divsubcatagoryselect','divsubcatagoryinput','compoundlist','subcatagoryselect','subcatagoryinput')">
+        </select>
+
+        </div>
+    
+        <div id="subcatagoryselect">
+        <span id="subcatagoryselectspan"></span>
+            <select name="thirdcatagoryselect" id="divsubcatagoryselect" onchange="Thirdselection(this.id,'subsubsubcatagoryinput')">
+        </select>
+        </div>
+
+        <div id="subcatagoryinput">
+            <span id="subcatagoryinputspan"></span>
+        <input name="thirdcatagoryinput"list="compoundlist" type="text" id="divsubcatagoryinput">
+        </div>
+
+        <div>
+        <input name="fourthcatagoryinput"type="text" id="subsubsubcatagoryinput">
+        </div>
+        <datalist id="compoundlist"></datalist>
+<div id="MSDS">
+     MSDS file : <input name="MSDSFILE"type="file">
+</div>
+     <div id="need">
+                Quantity :
+            <input name="quantityinput"type="number" placeholder="quantity">
+            <select name="quantityunit">
+                <option value="">Count</option>
+                <option value="">Gram</option>
+                <option value="">Mililitre</option>
+                <option value="">KG</option>
+                <option value="">Litre</option>
+            </select>
+            <br>
+            Expected cost: 
+            <input name="expectedcostinput"type="number" id="expected cost" >
+            <select name="expectedcostcurrency" id="currency" onchange="moreunit()">
+                <option value="USD">USD</option>
+                <option value="INR">INR</option>
+                <option value="EUR">EUR</option>
+                <option value="YEN">YEN</option>
+                <option value="GBP">GBP</option>
+                <option value="CHF">CHF</option>
+                <option value="AUD">AUD</option>
+                <option value="NZD">NZD</option>
+               <option value="more"><a href= "javascript:moreunit()" >more</a></option>
+            </select>
+            <br>
+            vendor: 
+            <input type="text" name="vendorinput" list="vendorlist">
+            <datalist id="vendorlist">
+                {%for x in vendorlist%}
+                <option value={{x.code}}>{{x.name}}</option>
+                {%endfor%}
+            </datalist>
+            <button type = "button"onclick="popupfunc()">Add Vendor</button>
+            <br>
+            <button type="submit" onclick="add_item()">Add Item</button>
+        </div>
+        <!-- <input type="submit" value="Submit" id="submit"> -->
+    </form>
+
+    <table>
+        <th>S no.</th>
+        <th>Item name</th>
+        <th>Quantity</th>
+        <th>Expected ammount</th>
+        <th>Vendor</th>
+        <th></th>
+        {%for x in itemlist%}
+        <tr>
+            <td></td>
+            <td>{{x.name}}</td>
+            <td>{{x.quantity}}</td>
+            <td>{{x.ammount}}</td>
+            <td>{{x.vendor}}</td>
+            <td><button id ="remove">Remove</button></td>
+        </tr>
+        {%endfor%}
+
+
+    </table>
+
+</body>
+
+</html>

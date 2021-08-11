@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <form method="POST"action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if messege %}
+        <div>{{messege}}</div>
+        {% endif %}
+    Username:
+    <input type="text"name="username"placeholder="Username">
+    <br>
+    Password:
+    <input type="Password"name="password"placeholder="Password">
+    <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add Vendor</title>
+</head>
+
+<body>
+    <h1>Add Vendor</h1>
+    <form method="POST">
+        {% csrf_token %}
+        vendor name : <input type="text" name="vendorname">
+        vendor location : <input type="text" name="vendorlocation">
+        vendor code : <input type="text" name="vendorcode">
+        vendor bank : <input type="text" name="vendorbank">
+        vendor account no : <input type="text" name="vendoraccountno">
+        vendor routing information : <input type="text" name="vendorroutinginformation">
+        vendor preferred currency : <select name="vendorprefferedcurrency" id="currency"></select>
+        <input type="submit">
+    </form>
+    <script>
+        fetch('http://127.0.0.1:8000/currency/')
+            .then(response => response.json())
+            .then(data => {
+                var newoption = document.createElement("option");
+                newoption.innerHTML = "--select--";
+                document.getElementById("currency").options.add(newoption);
+                for (option in data) {
+                    var newoption = document.createElement("option");
+                    newoption.value = `${data[option].id}`;
+                    newoption.innerHTML = `${data[option].symbol}`;
+                    document.getElementById("currency").options.add(newoption);
+                }
+            });
+
+    </script>
+
+</body>
+
+</html>
